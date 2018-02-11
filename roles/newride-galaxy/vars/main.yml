@@ -1,0 +1,92 @@
+---
+mysql_user_name: "{{ lookup('env','DB_USERNAME') }}"
+mysql_user_password: "{{ lookup('env','DB_PASSWORD') }}"
+mysql_root_password: "{{ lookup('env','DB_ROOT_PASSWORD') }}"
+mysql_databases:
+  - name: "{{ lookup('env','DB_DATABASE') }}"
+########## PHP VARS ##########
+php_version: '7.1'
+php_packages:
+  - "php{{ php_version }}"
+  - "php{{ php_version }}-bcmath"
+  - "php{{ php_version }}-mbstring"
+  - "php{{ php_version }}-cli"
+  - "php{{ php_version }}-curl"
+  - "php{{ php_version }}-fpm"
+  - "php{{ php_version }}-intl"
+  - "php{{ php_version }}-mysql"
+  - "php{{ php_version }}-xml"
+  - "php{{ php_version }}-zip"
+  - "php{{ php_version }}-gd"
+  - "php{{ php_version }}-apcu"
+  - "php-imagick"
+php_webserver_daemon: nginx
+php_packages_state: latest
+
+########## END OF PHP VARS ##########
+
+########## NODE.JS VARS ##########
+
+nodejs_version: "8.x"
+
+########## END OF NODE.JS VARS ##########
+
+########## NGINX CONFIG ##########
+nginx_sites:
+  default:
+    - listen 80
+    - server_name _
+    - root "/var/www/service/current/public"
+    - index index.php
+    - charset utf-8
+    - large_client_header_buffers 8 64k
+    - client_header_buffer_size 64k
+    - location / { try_files $uri $uri/ /index.php$is_args$args; }
+    - location = /favicon.ico { access_log off; log_not_found off; }
+    - location = /robots.txt  { access_log off; log_not_found off; }
+    - access_log on
+    - error_log  /var/log/nginx/service-error.log error
+    - access_log /var/log/nginx/service-access.log
+    - sendfile off
+    - client_max_body_size 100m
+    - location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php{{ php_version }}-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k; }
+    - location ~ /\.ht { deny all; }
+
+  ssl:
+    - listen 443
+    - server_name _
+    - root "/var/www/service/current/public"
+    - index index.php
+    - charset utf-8
+    - large_client_header_buffers 8 64k
+    - client_header_buffer_size 64k
+    - location / { try_files $uri $uri/ /index.php$is_args$args; }
+    - location = /favicon.ico { access_log off; log_not_found off; }
+    - location = /robots.txt  { access_log off; log_not_found off; }
+    - access_log on
+    - error_log  /var/log/nginx/service-error.log error
+    - access_log /var/log/nginx/service-access.log
+    - sendfile off
+    - client_max_body_size 100m
+    - location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php{{ php_version }}-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k; }
+    - location ~ /\.ht { deny all; }
+    - ssl_certificate     /root/ssl.crt
+    - ssl_certificate_key /root/ssl.key
+
+########## END OF NGINX CONFIG ##########

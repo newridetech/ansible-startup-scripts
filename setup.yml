@@ -1,0 +1,16 @@
+- hosts: all
+  become_user: root
+
+  pre_tasks:
+    - name: Generate SSL cloudflare key
+      command: "sudo openssl req -x509 -newkey rsa:4096 -keyout /root/ssl.key -out /root/ssl.crt -days 365 -subj '/C=PL/ST=MAZOVIAN/L=Warsaw/O={{ lookup('env','APP_DOMAIN') }}/OU={{ lookup('env','APP_DOMAIN') }}/CN={{ lookup('env','APP_DOMAIN') }}' -nodes"
+    - name: Create MySQL user group
+      group:
+        name: "{{ mysql_user_name }}"
+    - name: Create MySQL user
+      user:
+        name: "{{ mysql_user_name }}"
+        group: "{{ mysql_user_name }}"
+
+  roles:
+    - newride-galaxy

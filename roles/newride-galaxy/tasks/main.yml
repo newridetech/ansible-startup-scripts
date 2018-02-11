@@ -1,0 +1,5 @@
+---
+- name: Install PHP Imagick
+  package:
+    name: imagemagick
+    state: latest
