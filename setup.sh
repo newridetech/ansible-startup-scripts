@@ -6,12 +6,9 @@ export DB_USERNAME=""
 export DB_PASSWORD=""
 export DB_ROOT_PASSWORD=""
 #######
-apt-get update
-apt-get upgrade
-apt-get install software-properties-common
-apt-add-repository ppa:ansible/ansible
-apt-get update
-apt-get install ansible
+#######
+apt-get install python-pip
+pip install ansible
 mkdir /tmp/ansible_startup
 git clone git@github.com:newridetech/ansible-startup-scripts.git /tmp/ansible_startup
 ansible-playbook -i 'localhost,' --connection=local /tmp/ansible_startup/presetup.yml
