@@ -1,5 +1,6 @@
 #!/bin/sh
 #######
+export APP_ENV=""
 export APP_DOMAIN=""
 export DB_DATABASE=""
 export DB_USERNAME=""

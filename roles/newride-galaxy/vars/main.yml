@@ -6,6 +6,7 @@ mysql_databases:
   - name: "{{ lookup('env','DB_DATABASE') }}"
 ##########
 environment_config:
+  APP_ENV: "{{ lookup('env', 'APP_ENV') }}"
   APP_DOMAIN: "{{ lookup('env','APP_DOMAIN') }}"
   DB_DATABASE: "{{ lookup('env','DB_DATABASE') }}"
   DB_USERNAME: "{{ lookup('env','DB_USERNAME') }}"
