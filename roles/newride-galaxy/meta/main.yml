@@ -53,6 +53,7 @@ galaxy_info:
     #       Maximum 20 tags per role.
 
 dependencies:
+  - { role: franklinkim.environment }
   - { role: benjamin-smith.ondrej-php-repo }
   - { role: geerlingguy.mysql }
   - { role: dev-sec.mysql-hardening }
@@ -63,4 +64,3 @@ dependencies:
   - { role: geerlingguy.composer }
   - { role: geerlingguy.nodejs }
   - { role: ocha.yarn }
-  - { role: franklinkim.environment }
